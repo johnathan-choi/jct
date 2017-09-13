@@ -1,13 +1,13 @@
 // public/core.js
-var scotchTodo = angular.module('scotchTodo', []);
+var jct = angular.module('jct', []);
 
 function mainController($scope, $http) {
     $scope.formData = {};
 
-    // when landing on the page, get all todos and show them
-    $http.get('/api/todos')
+    // when landing on the page, get all tickets and show them
+    $http.get('/api/tickets')
         .success(function(data) {
-            $scope.todos = data;
+            $scope.tickets = data;
             console.log(data);
         })
         .error(function(data) {
@@ -15,11 +15,11 @@ function mainController($scope, $http) {
         });
 
     // when submitting the add form, send the text to the node API
-    $scope.createTodo = function() {
-        $http.post('/api/todos', $scope.formData)
+    $scope.createTicket = function() {
+        $http.post('/api/tickets', $scope.formData)
             .success(function(data) {
                 $scope.formData = {}; // clear the form so our user is ready to enter another
-                $scope.todos = data;
+                $scope.tickets = data;
                 console.log(data);
             })
             .error(function(data) {
@@ -27,11 +27,11 @@ function mainController($scope, $http) {
             });
     };
 
-    // delete a todo after checking it
-    $scope.deleteTodo = function(id) {
-        $http.delete('/api/todos/' + id)
+    // delete a ticket after checking it
+    $scope.deleteTicket = function(id) {
+        $http.delete('/api/tickets/' + id)
             .success(function(data) {
-                $scope.todos = data;
+                $scope.tickets = data;
                 console.log(data);
             })
             .error(function(data) {

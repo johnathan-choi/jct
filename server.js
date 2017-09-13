@@ -24,69 +24,68 @@
     app.use(methodOverride());
 
     // define model =================
-    var Todo = mongoose.model('Todo', {
-      text : String
+    var Ticket = mongoose.model('Ticket', {
+      subject : String,
+      body : String
     });
 
     // routes ======================================================================
 
     // api ---------------------------------------------------------------------
-    // get all todos
-    app.get('/api/todos', function(req, res) {
+    // get all tickets
+    app.get('/api/tickets', function(req, res) {
+        // use mongoose to get all tickets in the database
+        Ticket.find(function(err, tickets) {
+            // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+            if (err)
+                res.send(err)
+            res.json(tickets); // return all tickets in JSON format
+        });
+    });
       
-              // use mongoose to get all todos in the database
-              Todo.find(function(err, todos) {
-      
-                  // if there is an error retrieving, send the error. nothing after res.send(err) will execute
-                  if (err)
-                      res.send(err)
-      
-                  res.json(todos); // return all todos in JSON format
-              });
-          });
-      
-          // create todo and send back all todos after creation
-          app.post('/api/todos', function(req, res) {
-      
-              // create a todo, information comes from AJAX request from Angular
-              Todo.create({
-                  text : req.body.text,
-                  done : false
-              }, function(err, todo) {
-                  if (err)
-                      res.send(err);
-      
-                  // get and return all the todos after you create another
-                  Todo.find(function(err, todos) {
-                      if (err)
-                          res.send(err)
-                      res.json(todos);
-                  });
-              });
-      
-          });
-      
-          // delete a todo
-          app.delete('/api/todos/:todo_id', function(req, res) {
-              Todo.remove({
-                  _id : req.params.todo_id
-              }, function(err, todo) {
-                  if (err)
-                      res.send(err);
-      
-                  // get and return all the todos after you create another
-                  Todo.find(function(err, todos) {
-                      if (err)
-                          res.send(err)
-                      res.json(todos);
-                  });
-              });
-          });
-        
-      // application -------------------------------------------------------------
-      app.get('*', function(req, res) {
-      res.sendFile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
-      });
+    // create ticket and send back all tickets after creation
+    app.post('/api/tickets', function(req, res) {
+
+        // create a ticket, information comes from AJAX request from Angular
+        Ticket.create({
+            subject : req.body.text,
+            body : req.body.text,
+            done : false
+        }, function(err, ticket) {
+            if (err)
+                res.send(err);
+
+            // get and return all the tickets after you create another
+            Ticket.find(function(err, tickets) {
+                if (err)
+                    res.send(err)
+                res.json(tickets);
+            });
+        });
+
+    });
+
+    // delete a ticket
+    app.delete('/api/tickets/:ticket_id', function(req, res) {
+        Ticket.remove({
+            _id : req.params.ticket_id
+        }, function(err, ticket) {
+            if (err)
+                res.send(err);
+
+            // get and return all the tickets after you create another
+            Ticket.find(function(err, tickets) {
+                if (err)
+                    res.send(err)
+                res.json(tickets);
+            });
+        });
+    });
+
+    // application -------------------------------------------------------------
+    app.get('*', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    });
 
     // listen (start app with node server.js) ======================================
     app.listen(8080);
