@@ -2,6 +2,7 @@
 var jct = angular.module('jct', []);
 
 function mainController($scope, $http) {
+    $scope.formSubject = {};    
     $scope.formData = {};
 
     // when landing on the page, get all tickets and show them
@@ -18,6 +19,7 @@ function mainController($scope, $http) {
     $scope.createTicket = function() {
         $http.post('/api/tickets', $scope.formData)
             .success(function(data) {
+                $scope.formSubject = {}; 
                 $scope.formData = {}; // clear the form so our user is ready to enter another
                 $scope.tickets = data;
                 console.log(data);
